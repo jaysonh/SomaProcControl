@@ -6,78 +6,39 @@ import netP5.*;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
-float []cornersX = new float[4];
-float []cornersY = new float[4];
-int selected = -1;
+KeystoneManager keystoneManager;
+MsgDisplay      msgDisplay;
+UserInterface   userInterface;
+OSCHandler      oscHandler;
 
-int currKeystone = 0;
-
-MsgDisplay msgDisplay;
-UserInterface userInterface;
-OSCHandler oscHandler;
 void setup() 
 {
   size( 1200,600 );
   frameRate(25);
   
   userInterface = new UserInterface( this );
+  keystoneManager = new KeystoneManager(0,0, width/2,height);
   
   msgDisplay = new MsgDisplay(width/2, height/2, width/2-10, height/2-10);
   oscHandler = new OSCHandler(this);
-  
-  cornersX[0] = 0.01;
-  cornersY[0] = 0.01;
-  cornersX[1] = 0.99;
-  cornersY[1] = 0.01;
-  cornersX[2] = 0.99;
-  cornersY[2] = 0.99;
-  cornersX[3] = 0.01;
-  cornersY[3] = 0.99;
   
   frameRate(30);
 }
 
 
 void draw() {
-  background(0);  
-  noFill();
-  stroke(0,255,0);
-  beginShape();
-  for(int i= 0; i < 4;i++)
-  {
-     vertex(cornersX[i] * (float)width, cornersY[i] * (float)height); 
-  }
-  endShape(CLOSE);
   
-  if(selected > -1)
-  {
-     fill(0,255,0);
-     rect(cornersX[selected] * (float)width, cornersY[selected] * (float)height,10,10);
-  }
+  userInterface.update();
+  background(0);  
+  
+  keystoneManager.draw();
   
   msgDisplay.draw();
-  /*
-      OscMessage myMessage = new OscMessage("/soma/data");
-      myMessage.add(random(1)  ); 
-      for(int i= 0; i < 6;i++)
-      {
-        float r1 = random(0.0, 0.25) *10.0;
-        float r2 = random(0.0, 0.25)*10.0;
-        print(r1 + "," + r2 + " ");
-        myMessage.add( r1 );
-        myMessage.add( r2 );
-      }
-      println("");
-      
-      println(myMessage);
-      oscP5.send(myMessage, myRemoteLocation); 
-      
-      */
 }
 
 void keyPressed()
 {
-   if(key == 'p')
+   /*if(key == 'p')
    {
      OscMessage myMessage = new OscMessage("/soma/restartApp");
       oscP5.send(myMessage, myRemoteLocation); 
@@ -216,47 +177,20 @@ void keyPressed()
       oscP5.send(myMessage, myRemoteLocation); 
      
    }
+   */
 }
 void mouseReleased()
 {
-  /*
-  //OscMessage myMessage = new OscMessage("/soma/stonemap");
-  OscMessage myMessage = new OscMessage("/soma/keystone");
   
-  myMessage.add( currKeystone   ); 
-  myMessage.add(cornersX[0] );
-  myMessage.add(cornersY[0] );
-  myMessage.add(cornersX[1] ); 
-  myMessage.add(cornersY[1]  );
-  myMessage.add(cornersX[2]  );
-  myMessage.add(cornersY[2]  );
-  myMessage.add(cornersX[3] );
-  myMessage.add(cornersY[3]  );
-
-  oscP5.send(myMessage, myRemoteLocation); 
-*/  
-  selected = -1;
+  keystoneManager.mouseReleased(mouseX,mouseY);
 }
 
 void mouseDragged()
 {
-   if(selected > -1)
-   {
-       cornersX[selected] = (float)mouseX / (float)width;
-       cornersY[selected] = (float)mouseY / (float)height;
-   }
+  keystoneManager.mouseDragged(mouseX,mouseY);
 }
 
 void mousePressed() 
 {
-  String m = "hello:" + mouseY;
-  msgDisplay.addMsg( m);
-  
-  for(int i = 0; i < 4; i++)
-  {
-    if( dist(mouseX,mouseY, cornersX[i] * (float)width, cornersY[i] * (float)height) < 20)
-    {
-      selected = i;
-    }
-  }
+  keystoneManager.mousePressed(mouseX,mouseY);
 }

@@ -10,8 +10,8 @@ class UserInterface
        addButton("restartApp", width/2, 10 );
        addButton("stopApp",    width/2, 30 );
        addButton("restartPi",  width/2, 50 );
-       addButton("save",       width/2, 70 );
-       addButton("load",       width/2, 90 );
+       saveBtn = addButton("save",       width/2, 70 );
+       loadBtn = addButton("load",       width/2, 90 );
        
       laserEffect = cp5.addDropdownList("Laser Effect")
           .setPosition(width/2 + 250, 50);
@@ -19,6 +19,7 @@ class UserInterface
       {
         laserEffect.addItem(laserEffectList[i],i);
       }
+      laserEffect.setOpen(true);
       
      keystoneSelect =  cp5.addSlider("keystoneSelect")
      .setPosition(width/2 + 250,20)
@@ -29,12 +30,14 @@ class UserInterface
      {
         public void controlEvent(CallbackEvent c) {
           if(c.getAction()==ControlP5.ACTION_BROADCAST) {
-            sl.getValueLabel().setText(String.format("%.0f" , sl.getValue()));
+            keystoneSelect.getValueLabel().setText(String.format("%.0f" , keystoneSelect.getValue()));
+            
+            keystoneManager.setKeystone( (int)keystoneSelect.getValue() );
           }
         }
       };
       // add the callback listener to slider sl 
-      sl.addCallback(adjustLabel);
+      keystoneSelect.addCallback(adjustLabel);
     }
     
     Button addButton(String btnName, int posX, int posY)
@@ -49,16 +52,34 @@ class UserInterface
          return b;
     }
     
+    void update()
+    {
+         laserEffect.setOpen(true);
+    }
+    
     void mousePress(Controller objPressed )
     {
         if(objPressed == restartBtn)
         {
             
         }
+        
+        if(objPressed == laserEffect )
+        {
+        }
+        
+        if(objPressed == saveBtn)
+        {
+          keystoneManager.save();
+        }
+        if(objPressed == loadBtn)
+        {
+          keystoneManager.load();
+        }
     }
     
     ArrayList <Controller> uiElements  = new ArrayList<Controller>();
-    Button restartBtn;
+    Button restartBtn, saveBtn, loadBtn;
     
     Slider keystoneSelect;
     DropdownList laserEffect; 
