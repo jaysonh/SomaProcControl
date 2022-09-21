@@ -4,6 +4,13 @@ class OSCHandler
    {
      oscP5 = new OscP5(appRef, SEND_PORT );
      myRemoteLocation = new NetAddress("192.168.0.142", RECV_PORT );
+     
+     
+   }
+   
+   boolean isConnected()
+   {
+     return myRemoteLocation.isvalid();
    }
    
    void sendMsg( String address )
