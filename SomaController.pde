@@ -11,16 +11,20 @@ float []cornersY = new float[4];
 int selected = -1;
 
 int currKeystone = 0;
+
+MsgDisplay msgDisplay;
+OSCHandler oscHandler;
 void setup() 
 {
-  size( 600,600 );
+  size( 1200,600 );
   frameRate(25);
   
   userInterface = new ControlP5( this );
+   msgDisplay = new MsgDisplay(width/2, 0, width/2, height);
   /* start oscP5, listening for incoming messages at port 9001 */
-  oscP5 = new OscP5(this,9001);
-  myRemoteLocation = new NetAddress("192.168.0.142", 9000);
-
+  
+  oscHandler = new OSCHandler(this);
+  
   cornersX[0] = 0.01;
   cornersY[0] = 0.01;
   cornersX[1] = 0.99;
@@ -51,7 +55,9 @@ void draw() {
      rect(cornersX[selected] * (float)width, cornersY[selected] * (float)height,10,10);
   }
   
-   OscMessage myMessage = new OscMessage("/soma/data");
+  msgDisplay.draw();
+  /*
+      OscMessage myMessage = new OscMessage("/soma/data");
       myMessage.add(random(1)  ); 
       for(int i= 0; i < 6;i++)
       {
@@ -65,6 +71,8 @@ void draw() {
       
       println(myMessage);
       oscP5.send(myMessage, myRemoteLocation); 
+      
+      */
 }
 
 void keyPressed()
@@ -78,51 +86,61 @@ void keyPressed()
    
    if(key == 'o')
    {
-     OscMessage myMessage = new OscMessage("/soma/stopApp");
-      oscP5.send(myMessage, myRemoteLocation); 
-     println("Sending: /soma/stopApp");
+      //OscMessage myMessage = new OscMessage("/soma/stopApp");
+      //oscP5.send(myMessage, myRemoteLocation); 
+      //println("Sending: /soma/stopApp");
+      
+      oscHandler.sendMsg("/soma/stopApp");
    }
    if(key == 'i')
    {
-     OscMessage myMessage = new OscMessage("/soma/restartPi");
-      oscP5.send(myMessage, myRemoteLocation); 
-     println("Sending: /soma/restartPi");
+      //OscMessage myMessage = new OscMessage("/soma/restartPi");
+      //oscP5.send(myMessage, myRemoteLocation); 
+      //println("Sending: /soma/restartPi");
+      oscHandler.sendMsg("/soma/restartPi");
    }
    if(key == 'z' )
    {
-      OscMessage myMessage = new OscMessage("/soma/effect");
-      myMessage.add( 0 );
-      oscP5.send(myMessage, myRemoteLocation); 
+      //OscMessage myMessage = new OscMessage("/soma/effect");
+      //myMessage.add( 0 );
+      //oscP5.send(myMessage, myRemoteLocation); 
+      oscHandler.sendMsg( "/soma/effect", 0 );
    }
    if(key == 'x' )
    {
-      OscMessage myMessage = new OscMessage("/soma/effect");
-      myMessage.add( 1 );
-      oscP5.send(myMessage, myRemoteLocation); 
+      //OscMessage myMessage = new OscMessage("/soma/effect");
+      //myMessage.add( 1 );
+      //oscP5.send(myMessage, myRemoteLocation); 
+      oscHandler.sendMsg( "/soma/effect", 1 );
    }
    if(key == 'c' )
    {
-      OscMessage myMessage = new OscMessage("/soma/effect");
-      myMessage.add( 2 );
-      oscP5.send(myMessage, myRemoteLocation); 
+      //OscMessage myMessage = new OscMessage("/soma/effect");
+      //myMessage.add( 2 );
+      //oscP5.send(myMessage, myRemoteLocation); 
+      
+      oscHandler.sendMsg( "/soma/effect", 2 );
    }
    if(key == 'v' )
    {
-      OscMessage myMessage = new OscMessage("/soma/effect");
-      myMessage.add( 3 );
-      oscP5.send(myMessage, myRemoteLocation); 
+      //OscMessage myMessage = new OscMessage("/soma/effect");
+      //myMessage.add( 3 );
+      //oscP5.send(myMessage, myRemoteLocation);
+      oscHandler.sendMsg( "/soma/effect", 3 ); 
    }
    if(key == 'b' )
    {
-      OscMessage myMessage = new OscMessage("/soma/effect");
-      myMessage.add( 4 );
-      oscP5.send(myMessage, myRemoteLocation); 
+      //OscMessage myMessage = new OscMessage("/soma/effect");
+      //myMessage.add( 4 );
+      //oscP5.send(myMessage, myRemoteLocation);
+      oscHandler.sendMsg( "/soma/effect", 4 );  
    }
    if(key == 'n' )
    {
-      OscMessage myMessage = new OscMessage("/soma/effect");
-      myMessage.add( 5 );
-      oscP5.send(myMessage, myRemoteLocation); 
+      //OscMessage myMessage = new OscMessage("/soma/effect");
+      //myMessage.add( 5 );
+      //oscP5.send(myMessage, myRemoteLocation); 
+      oscHandler.sendMsg( "/soma/effect", 5 ); 
    }
    if(key == 'm' )
    {
