@@ -19,6 +19,16 @@ class OSCHandler
       oscP5.send(myMessage, myRemoteLocation); 
    }
    
+   void sendMsg( OscMessage msg )
+   { 
+      oscP5.send( msg, myRemoteLocation); 
+   }
+   
+   void sendKeystone( Keystone keystone )
+   {
+        
+   }
+   
    void sendMsg( String address, int val )
    {     
       OscMessage oscMsg = new OscMessage( address );

@@ -3,9 +3,13 @@ ControlP5 cp5;
 class UserInterface
 {
  
-    UserInterface( PApplet appRef)
+    UserInterface( PApplet appRef, OSCHandler _osc)
     {
        cp5 = new ControlP5(appRef);
+       
+       // set up osc
+       osc = _osc;
+       osc.sendMsg( "/soma/keystoneSet", 0 );
        
        addButton("restartApp", width/2, 10 );
        addButton("stopApp",    width/2, 30 );
@@ -61,11 +65,13 @@ class UserInterface
     {
         if(objPressed == restartBtn)
         {
-            
+            piManager.restartPi();
         }
         
         if(objPressed == laserEffect )
         {
+          int selection = (int) laserEffect.getValue();
+          osc.sendMsg( "/soma/keystoneSet", selection );
         }
         
         if(objPressed == saveBtn)
@@ -80,7 +86,7 @@ class UserInterface
     
     ArrayList <Controller> uiElements  = new ArrayList<Controller>();
     Button restartBtn, saveBtn, loadBtn;
-    
+    OSCHandler osc;
     Slider keystoneSelect;
     DropdownList laserEffect; 
     

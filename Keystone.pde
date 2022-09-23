@@ -15,11 +15,19 @@ class Keystone
       cornersY[3] = _y + _h;
   }
   
-  float setCorners( float x0, float y0,
-                    float x1, float y1,
-                    float x2, float y2,
-                    float x3, float y3  )
+  void setCorners( float x0, float y0,
+                   float x1, float y1,
+                   float x2, float y2,
+                   float x3, float y3  )
   {
+      cornersX[0] = x0;
+      cornersY[0] = y0;
+      cornersX[1] = x1;
+      cornersY[1] = y1;
+      cornersX[2] = x2;
+      cornersY[2] = y2;
+      cornersX[3] = x3;
+      cornersY[3] = y3;
   }
                     
   void draw(float _displayW, float _displayH)
@@ -96,6 +104,7 @@ class Keystone
         {
           println("selected: " + i);
           selectedCorner = i;
+          
         }
       } 
   }

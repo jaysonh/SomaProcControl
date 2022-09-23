@@ -1,7 +1,8 @@
 class KeystoneManager
 {
-  KeystoneManager(float _displayX, float _displayY, float _displayW, float _displayH)
+  KeystoneManager(float _displayX, float _displayY, float _displayW, float _displayH, OSCHandler _osc)
   {
+    osc      = _osc;
     displayX = _displayX;
     displayY = _displayY;
     displayW = _displayW;
@@ -80,7 +81,7 @@ class KeystoneManager
                                 xCoords[3], yCoords[3] );
       }
       
-      println(displayX, displayY, displayW, displayH);
+      updateLaser();
   }
   
   void mouseReleased( int mX, int mY)
@@ -91,6 +92,7 @@ class KeystoneManager
         //selectedKey = -1;
         float mouseNormX = (float)(mX - displayX) / (float)displayW;
         float mouseNormY = (float)(mY - displayY) / (float)displayH;
+        
         keystone[selectedKey].mouseReleased( mouseNormX, mouseNormY );
       }
   }
@@ -100,15 +102,38 @@ class KeystoneManager
           mY > displayY && mY < displayY + displayH )
       {
         
-         if(selectedKey > -1)
+         if( selectedKey > -1 )
          { 
               float mouseNormX = (float)(mX - displayX) / (float)displayW;
               float mouseNormY = (float)(mY - displayY) / (float)displayH;
+              
               keystone[selectedKey].mouseDragged( mouseNormX, mouseNormY );
+              
+              updateLaser();
          }     
       }
   }
   
+  void updateLaser()
+  {
+    if( selectedKey > -1 )
+    {
+        //OscMessage myMessage = new OscMessage("/soma/stonemap");
+        OscMessage myMessage = new OscMessage("/soma/keystone");
+        
+        myMessage.add( selectedKey   ); 
+        myMessage.add(keystone[ selectedKey ].cornersX[0] );
+        myMessage.add(keystone[ selectedKey ].cornersY[0] );
+        myMessage.add(keystone[ selectedKey ].cornersX[1] ); 
+        myMessage.add(keystone[ selectedKey ].cornersY[1]  );
+        myMessage.add(keystone[ selectedKey ].cornersX[2]  );
+        myMessage.add(keystone[ selectedKey ].cornersY[2]  );
+        myMessage.add(keystone[ selectedKey ].cornersX[3] );
+        myMessage.add(keystone[ selectedKey ].cornersY[3]  );
+   
+        osc.sendMsg( myMessage );
+    }
+  }
   
   void mousePressed( int mX, int mY)
   {
@@ -139,6 +164,7 @@ class KeystoneManager
      selectedKey = keyIndx; 
   }
   
+  OSCHandler osc;
   final String saveFilePath = "data/keystone.json";
   
   int selectedKey = 0;

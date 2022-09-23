@@ -10,17 +10,18 @@ KeystoneManager keystoneManager;
 MsgDisplay      msgDisplay;
 UserInterface   userInterface;
 OSCHandler      oscHandler;
+PiManager       piManager;
 
 void setup() 
 {
   size( 1200,600 );
   frameRate(25);
+  oscHandler      = new OSCHandler(this);
+  userInterface   = new UserInterface( this, oscHandler );
+  keystoneManager = new KeystoneManager(0,0, width/2,height, oscHandler);
+  msgDisplay      = new MsgDisplay(width/2, height/2, width/2-10, height/2-10);
   
-  userInterface = new UserInterface( this );
-  keystoneManager = new KeystoneManager(0,0, width/2,height);
-  
-  msgDisplay = new MsgDisplay(width/2, height/2, width/2-10, height/2-10);
-  oscHandler = new OSCHandler(this);
+  piManager       = new PiManager( oscHandler );
   
   frameRate(30);
 }
@@ -38,77 +39,7 @@ void draw() {
 
 void keyPressed()
 {
-   /*if(key == 'p')
-   {
-     OscMessage myMessage = new OscMessage("/soma/restartApp");
-      oscP5.send(myMessage, myRemoteLocation); 
-     println("Sending: /soma/restartApp");
-   }
-   
-   if(key == 'o')
-   {
-      //OscMessage myMessage = new OscMessage("/soma/stopApp");
-      //oscP5.send(myMessage, myRemoteLocation); 
-      //println("Sending: /soma/stopApp");
-      
-      oscHandler.sendMsg("/soma/stopApp");
-   }
-   if(key == 'i')
-   {
-      //OscMessage myMessage = new OscMessage("/soma/restartPi");
-      //oscP5.send(myMessage, myRemoteLocation); 
-      //println("Sending: /soma/restartPi");
-      oscHandler.sendMsg("/soma/restartPi");
-   }
-   if(key == 'z' )
-   {
-      //OscMessage myMessage = new OscMessage("/soma/effect");
-      //myMessage.add( 0 );
-      //oscP5.send(myMessage, myRemoteLocation); 
-      oscHandler.sendMsg( "/soma/effect", 0 );
-   }
-   if(key == 'x' )
-   {
-      //OscMessage myMessage = new OscMessage("/soma/effect");
-      //myMessage.add( 1 );
-      //oscP5.send(myMessage, myRemoteLocation); 
-      oscHandler.sendMsg( "/soma/effect", 1 );
-   }
-   if(key == 'c' )
-   {
-      //OscMessage myMessage = new OscMessage("/soma/effect");
-      //myMessage.add( 2 );
-      //oscP5.send(myMessage, myRemoteLocation); 
-      
-      oscHandler.sendMsg( "/soma/effect", 2 );
-   }
-   if(key == 'v' )
-   {
-      //OscMessage myMessage = new OscMessage("/soma/effect");
-      //myMessage.add( 3 );
-      //oscP5.send(myMessage, myRemoteLocation);
-      oscHandler.sendMsg( "/soma/effect", 3 ); 
-   }
-   if(key == 'b' )
-   {
-      //OscMessage myMessage = new OscMessage("/soma/effect");
-      //myMessage.add( 4 );
-      //oscP5.send(myMessage, myRemoteLocation);
-      oscHandler.sendMsg( "/soma/effect", 4 );  
-   }
-   if(key == 'n' )
-   {
-      //OscMessage myMessage = new OscMessage("/soma/effect");
-      //myMessage.add( 5 );
-      //oscP5.send(myMessage, myRemoteLocation); 
-      oscHandler.sendMsg( "/soma/effect", 5 ); 
-   }
-   if(key == 'm' )
-   {
-      OscMessage myMessage = new OscMessage("/soma/effect");
-      myMessage.add( 6 );
-      oscP5.send(myMessage, myRemoteLocation); 
-   }
+  /*
    if( key == 'w')
    {
       OscMessage myMessage = new OscMessage("/soma/data");
@@ -163,19 +94,6 @@ void keyPressed()
       myMessage.add( 5  ); 
       oscP5.send(myMessage, myRemoteLocation); 
       currKeystone = 5;
-   }
-   
-   if(key=='s')
-   {
-      OscMessage myMessage = new OscMessage("/soma/saveKeystone");
-      oscP5.send(myMessage, myRemoteLocation); 
-     
-   }
-   if(key=='l')
-   {
-      OscMessage myMessage = new OscMessage("/soma/loadKeystone");
-      oscP5.send(myMessage, myRemoteLocation); 
-     
    }
    */
 }
