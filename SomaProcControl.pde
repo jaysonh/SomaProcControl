@@ -16,6 +16,16 @@ void setup()
 {
   size( 1200,600 );
   frameRate(25);
+  
+  Mocap mocap1 = new Mocap( DANCE_3D_FILE );
+  MocapInstance mocapinst1 = new MocapInstance(mocap1,0,new float[] {0.,0.,0.},
+                                              new float[] {0.,0.,0.},1.,
+                                              color(255, 0, 0),1);
+  instances.add(mocapinst1);
+  
+  println("Loaded 3d movement file");
+  
+  
   oscHandler      = new OSCHandler(this);
   userInterface   = new UserInterface( this, oscHandler );
   keystoneManager = new KeystoneManager(0,0, width/2,height, oscHandler);
@@ -28,13 +38,16 @@ void setup()
 
 
 void draw() {
-  
-  userInterface.update();
-  background(0);  
-  
-  keystoneManager.draw();
-  
-  msgDisplay.draw();
+  background(100, 100, 100);
+  rotations();  
+  drawGroundPlane(50);
+    
+  for (MocapInstance inst : instances) 
+    inst.drawMocap();
+    
+  //userInterface.update();
+  //keystoneManager.draw();
+  //msgDisplay.draw();
 }
 
 void keyPressed()
