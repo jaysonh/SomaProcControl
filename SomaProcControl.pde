@@ -39,15 +39,15 @@ void setup()
 
 void draw() {
   background(100, 100, 100);
-  rotations();  
-  drawGroundPlane(50);
+  //rotations();  
+  //drawGroundPlane(50);
     
-  for (MocapInstance inst : instances) 
-    inst.drawMocap();
+  //for (MocapInstance inst : instances) 
+  //  inst.drawMocap();
     
-  //userInterface.update();
-  //keystoneManager.draw();
-  //msgDisplay.draw();
+  userInterface.update();
+  keystoneManager.draw();
+  msgDisplay.draw();
 }
 
 void keyPressed()

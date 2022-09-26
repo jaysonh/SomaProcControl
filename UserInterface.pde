@@ -10,12 +10,12 @@ class UserInterface
        // set up osc
        osc = _osc;
        osc.sendMsg( "/soma/keystoneSet", 0 );
-       
-       addButton("restartApp", width/2, 10 );
-       addButton("stopApp",    width/2, 30 );
-       addButton("restartPi",  width/2, 50 );
-       saveBtn = addButton("save",       width/2, 70 );
-       loadBtn = addButton("load",       width/2, 90 );
+      
+       restartAppBtn = addButton("restartApp", width/2, 10 );
+       stopAppBtn    = addButton("stopApp",    width/2, 30 );
+       restartPiBtn  = addButton("restartPi",  width/2, 50 );
+       saveBtn       = addButton("save",       width/2, 70 );
+       loadBtn       = addButton("load",       width/2, 90 );
        
       laserEffect = cp5.addDropdownList("Laser Effect")
           .setPosition(width/2 + 250, 50);
@@ -27,14 +27,14 @@ class UserInterface
       
      keystoneSelect =  cp5.addSlider("keystoneSelect")
      .setPosition(width/2 + 250,20)
-     .setRange(0,5)
+     .setRange(0,5.99)
      ;
      
      CallbackListener adjustLabel = new CallbackListener() 
      {
         public void controlEvent(CallbackEvent c) {
           if(c.getAction()==ControlP5.ACTION_BROADCAST) {
-            keystoneSelect.getValueLabel().setText(String.format("%.0f" , keystoneSelect.getValue()));
+            keystoneSelect.getValueLabel().setText("val: " + (int) keystoneSelect.getValue());
             
             keystoneManager.setKeystone( (int)keystoneSelect.getValue() );
           }
@@ -63,9 +63,19 @@ class UserInterface
     
     void mousePress(Controller objPressed )
     {
-        if(objPressed == restartBtn)
+        if(objPressed == restartPiBtn)
         {
             piManager.restartPi();
+        }
+        
+        if(objPressed == restartAppBtn)
+        {
+           piManager.restartApp();
+        }
+        
+        if( objPressed == stopAppBtn )
+        {
+           piManager.stoppApp();
         }
         
         if(objPressed == laserEffect )
@@ -77,15 +87,17 @@ class UserInterface
         if(objPressed == saveBtn)
         {
           keystoneManager.save();
+          osc.sendMsg( "/soma/saveKeystone" );
         }
         if(objPressed == loadBtn)
         {
           keystoneManager.load();
+          osc.sendMsg( "/soma/loadKeystone" );
         }
     }
     
     ArrayList <Controller> uiElements  = new ArrayList<Controller>();
-    Button restartBtn, saveBtn, loadBtn;
+    Button restartPiBtn, stopAppBtn, restartAppBtn, saveBtn, loadBtn;
     OSCHandler osc;
     Slider keystoneSelect;
     DropdownList laserEffect; 

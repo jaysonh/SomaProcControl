@@ -2,9 +2,9 @@ class OSCHandler
 {
    OSCHandler( PApplet appRef )
    {
-     oscP5 = new OscP5(appRef, SEND_PORT );
-     myRemoteLocation = new NetAddress("192.168.0.142", RECV_PORT );
-     
+     oscP5 = new OscP5(appRef, RECV_PORT );
+     //myRemoteLocation = new NetAddress("192.168.0.142", RECV_PORT );
+     myRemoteLocation = new NetAddress("192.168.0.142", SEND_PORT );
      
    }
    
@@ -15,12 +15,14 @@ class OSCHandler
    
    void sendMsg( String address )
    {       
+     println("sending: " + address);
       OscMessage myMessage = new OscMessage( address );
       oscP5.send(myMessage, myRemoteLocation); 
    }
    
    void sendMsg( OscMessage msg )
    { 
+     println("sending: " + msg);
       oscP5.send( msg, myRemoteLocation); 
    }
    
@@ -31,6 +33,7 @@ class OSCHandler
    
    void sendMsg( String address, int val )
    {     
+     println("sending: " + address);
       OscMessage oscMsg = new OscMessage( address );
       oscMsg.add( val );
       oscP5.send( oscMsg, myRemoteLocation); 

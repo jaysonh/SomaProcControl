@@ -50,6 +50,8 @@ class KeystoneManager
       }
         
       saveJSONObject(json, saveFilePath);
+      
+      
   }
   
   void load()
@@ -94,6 +96,7 @@ class KeystoneManager
         float mouseNormY = (float)(mY - displayY) / (float)displayH;
         
         keystone[selectedKey].mouseReleased( mouseNormX, mouseNormY );
+        updateLaser();
       }
   }
   void mouseDragged(int mX, int mY)
@@ -108,8 +111,8 @@ class KeystoneManager
               float mouseNormY = (float)(mY - displayY) / (float)displayH;
               
               keystone[selectedKey].mouseDragged( mouseNormX, mouseNormY );
-              
               updateLaser();
+              
          }     
       }
   }
@@ -118,8 +121,9 @@ class KeystoneManager
   {
     if( selectedKey > -1 )
     {
+       println("sending corners: " +  keystone[ selectedKey ].cornersX[1]  +  keystone[ selectedKey ].cornersY[1]);;
         //OscMessage myMessage = new OscMessage("/soma/stonemap");
-        OscMessage myMessage = new OscMessage("/soma/keystone");
+        OscMessage myMessage = new OscMessage("/soma/keystoneCorners");
         
         myMessage.add( selectedKey   ); 
         myMessage.add(keystone[ selectedKey ].cornersX[0] );
@@ -162,6 +166,11 @@ class KeystoneManager
          keystone[i].deselect(); 
      }
      selectedKey = keyIndx; 
+     
+     // send to laser
+     OscMessage myMessage = new OscMessage("/soma/keystoneSel");
+     myMessage.add( selectedKey   ); 
+     osc.sendMsg( myMessage );
   }
   
   OSCHandler osc;

@@ -69,7 +69,7 @@ class Mocap {
 
 println("mocapFile size: " + lines.length);
     for (int i=0;i<lines.length;i++) {
-println(lines[i]);
+//println(lines[i]);
       //--- Read hierarchy ---  
       String[] words = splitTokens(lines[i], " \t");
 
