@@ -11,23 +11,30 @@ class UserInterface
        osc = _osc;
        osc.sendMsg( "/soma/keystoneSet", 0 );
       
-       restartAppBtn = addButton("restartApp", width/2, 10 );
-       stopAppBtn    = addButton("stopApp",    width/2, 30 );
-       restartPiBtn  = addButton("restartPi",  width/2, 50 );
-       saveBtn       = addButton("save",       width/2, 70 );
-       loadBtn       = addButton("load",       width/2, 90 );
+       restartAppBtn  = addButton("restartApp",   width/2, 10 );
+       stopAppBtn     = addButton("stopApp",      width/2, 30 );
+       restartPiBtn   = addButton("restartPi",    width/2, 50 );
+       saveBtn        = addButton("save",         width/2, 70 );
+       loadBtn        = addButton("load",         width/2, 90 );
+       editKeystone   = addToggle("editKeystone", width/2, 130);
+       timerChangeTgl = addToggle("timerChange",  width/2 + 250, 40);
        
       laserEffect = cp5.addDropdownList("Laser Effect")
-          .setPosition(width/2 + 250, 50);
+          .setPosition(width/2 + 250, 110);
       for(int i =0; i < laserEffectList.length;i++)
       {
         laserEffect.addItem(laserEffectList[i],i);
       }
       laserEffect.setOpen(true);
       
-     keystoneSelect =  cp5.addSlider("keystoneSelect")
+     keystoneSelect = cp5.addSlider("keystoneSelect")
      .setPosition(width/2 + 250,20)
      .setRange(0,5.99)
+     ;
+     
+     effectChangeTimeSlider = cp5.addSlider("effectChange")
+     .setPosition(width/2 + 250,80)
+     .setRange(0,100)
      ;
      
      CallbackListener adjustLabel = new CallbackListener() 
@@ -42,6 +49,31 @@ class UserInterface
       };
       // add the callback listener to slider sl 
       keystoneSelect.addCallback(adjustLabel);
+    }
+    
+    Toggle addToggle(String toggleName, int posX, int posY)
+    {
+        int toggleSize = 20;
+        Toggle toggle = cp5.addToggle(toggleName)
+                           .setPosition(posX, posY)
+                           .setSize( toggleSize, toggleSize)
+                           .setValue(true)
+                           //.setMode(ControlP5.SWITCH)
+                           ;
+                           
+        Textlabel lbl = cp5.addLabel(" " + toggleName)
+                           .setPosition(posX+toggleSize + 5,posY + 6);
+
+        uiElements.add( toggle ) ;
+        return toggle;
+    }
+    
+    void setLaserTimer( int useTimer, float timerChange )
+    {
+        changeActive     = useTimer == 1;
+        effectChangeTime = timerChange;
+        timerChangeTgl.setValue( useTimer );
+        effectChangeTimeSlider.setValue( timerChange );
     }
     
     Button addButton(String btnName, int posX, int posY)
@@ -63,6 +95,25 @@ class UserInterface
     
     void mousePress(Controller objPressed )
     {
+      
+        if( objPressed == editKeystone )
+        {
+            piManager.setToggleKeystone( (int)editKeystone.getValue() );
+            keystoneManager.setEdit( (int)editKeystone.getValue() == 1 );
+        }
+        
+        if( objPressed == effectChangeTimeSlider )
+        {
+            effectChangeTime = effectChangeTimeSlider.getValue();
+        }
+        
+        if( objPressed == timerChangeTgl )
+        {
+           boolean b = (timerChangeTgl.getValue() == 1);
+           effectChangeTimeSlider.setVisible( b );
+           changeActive = b;
+        }
+      
         if(objPressed == restartPiBtn)
         {
             piManager.restartPi();
@@ -80,8 +131,7 @@ class UserInterface
         
         if(objPressed == laserEffect )
         {
-          int selection = (int) laserEffect.getValue();
-          osc.sendMsg( "/soma/keystoneSet", selection );
+          changeLaserEffect( (int) laserEffect.getValue() );
         }
         
         if(objPressed == saveBtn)
@@ -92,15 +142,18 @@ class UserInterface
         if(objPressed == loadBtn)
         {
           keystoneManager.load();
-          osc.sendMsg( "/soma/loadKeystone" );
         }
     }
     
-    ArrayList <Controller> uiElements  = new ArrayList<Controller>();
+    ArrayList <Controller> uiElements = new ArrayList<Controller>();
     Button restartPiBtn, stopAppBtn, restartAppBtn, saveBtn, loadBtn;
+    Toggle editKeystone, timerChangeTgl;
+    
     OSCHandler osc;
     Slider keystoneSelect;
+    Slider effectChangeTimeSlider;
+    
     DropdownList laserEffect; 
     
-    String []laserEffectList = { "hello", "world", "these", "are", "the", "effect"};
+    String []laserEffectList = { "Circles", "Lines", "Points", "Rain" };
 }

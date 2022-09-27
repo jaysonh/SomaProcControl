@@ -24,6 +24,14 @@ class PiManager
        osc.sendMsg("/soma/effect", laserSelection);
    }
    
+   void setToggleKeystone( int toggleVal )
+   {
+       if( toggleVal == 1 )
+         osc.sendMsg( "/soma/effect", 4 ); 
+       else
+         osc.sendMsg( "/soma/effect", 0 ); 
+   }
+   
    final String RESTART_PI_ADDR  = "/soma/restartPi";
    final String RESTART_APP_ADDR = "/soma/restartApp";
    final String STOP_APP_ADDR    = "/soma/stopApp";

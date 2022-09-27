@@ -17,6 +17,7 @@ void setup()
   size( 1200,600 );
   frameRate(25);
   
+  
   Mocap mocap1 = new Mocap( DANCE_3D_FILE );
   MocapInstance mocapinst1 = new MocapInstance(mocap1,0,new float[] {0.,0.,0.},
                                               new float[] {0.,0.,0.},1.,
@@ -29,9 +30,10 @@ void setup()
   oscHandler      = new OSCHandler(this);
   userInterface   = new UserInterface( this, oscHandler );
   keystoneManager = new KeystoneManager(0,0, width/2,height, oscHandler);
-  msgDisplay      = new MsgDisplay(width/2, height/2, width/2-10, height/2-10);
-  
+  msgDisplay      = new MsgDisplay(width/2, height/2, width/2-10, height/2-10);  
   piManager       = new PiManager( oscHandler );
+  
+  setupEffectChange();
   
   frameRate(30);
 }

@@ -63,6 +63,11 @@ class KeystoneManager
       displayW = json.getFloat("displayW");
       displayH = json.getFloat("displayH");
       
+      int   useTimer    = json.getInt  ("useTimer");
+      float timerChange = json.getFloat("timerChange");
+      
+      setLaserTimer(useTimer, timerChange);
+      
       for( int i = 0; i < NUM_KEYSTONES; i++ )
       {
         JSONObject keystoneJson = json.getJSONObject("keystone" + i);
@@ -83,7 +88,14 @@ class KeystoneManager
                                 xCoords[3], yCoords[3] );
       }
       
+      osc.sendMsg( "/soma/loadKeystone" );
       updateLaser();
+  }
+  
+  void setLaserTimer( int useTimer, float timerChange )
+  {      
+        
+        userInterface.setLaserTimer( useTimer, timerChange );
   }
   
   void mouseReleased( int mX, int mY)
@@ -172,6 +184,18 @@ class KeystoneManager
      myMessage.add( selectedKey   ); 
      osc.sendMsg( myMessage );
   }
+  
+  boolean isEditing()
+  {
+    return isEdit;
+  }  
+  
+  void setEdit( boolean status )
+  {
+     isEdit = status; 
+  }
+  
+  boolean isEdit = false;
   
   OSCHandler osc;
   final String saveFilePath = "data/keystone.json";
